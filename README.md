@@ -6,6 +6,24 @@ The official Ruby gem to interact with the Nymeria service and API.
 
 ![Nymeria makes finding contact details a breeze.](https://www.nymeria.io/marquee.png)
 
+## Usage
+
+#### Set and Check an API Key.
+
+```ruby
+require 'nymeria'
+
+Nymeria.api_key = 'ny_your-api-key'
+
+if Nymeria.check_authentication.success?
+  puts "OK!"
+end
+```
+
+All API endpoints assume an auth key has been set. You should set the auth key
+early in your program. The key will automatically be added to all future
+requests.
+
 ## License
 
 MIT License
