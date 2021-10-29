@@ -1,5 +1,7 @@
 # Nymeria
 
+[![Gem Version](https://badge.fury.io/rb/nymeria.svg)](https://badge.fury.io/rb/nymeria)
+
 The official Ruby gem to interact with the Nymeria service and API.
 
 ![Nymeria makes finding contact details a breeze.](https://www.nymeria.io/marquee.png)
