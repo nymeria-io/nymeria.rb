@@ -8,6 +8,12 @@ The official Ruby gem to interact with the Nymeria service and API.
 
 ## Usage
 
+#### Installation
+
+```bash
+$ gem install nymeria
+```
+
 #### Set and Check an API Key.
 
 ```ruby
@@ -23,6 +29,55 @@ end
 All API endpoints assume an auth key has been set. You should set the auth key
 early in your program. The key will automatically be added to all future
 requests.
+
+#### Verify an Email Address
+
+```ruby
+require 'nymeria'
+
+Nymeria.api_key = 'ny_your-api-key'
+
+resp = Nymeria.verify("someone@somewhere.com")
+
+if resp.success?
+  puts resp.data.result
+end
+```
+
+At this time only professional email addresses are supported by the API.
+
+#### Enrich a Profile
+
+```ruby
+require 'nymeria'
+
+Nymeria.api_key = 'ny_your-api-key'
+
+resp = Nymeria.enrich("github.com/someone")
+
+if resp.success?
+  puts resp.data.emails
+end
+```
+
+The enrich API works on a profile by profile basis. If you need to enrich
+multiple profiles at once you can use the bulk enrichment API.
+
+#### Bulk Enrichment of Profiles
+
+```ruby
+require 'nymeria'
+
+Nymeria.api_key = 'ny_your-api-key'
+
+resp = Nymeria.enrich([ { url: "github.com/someone" }, { url: "linkedin.com/in/someoneelse" } ])
+
+if resp.success?
+  resp.data.each do |match|
+    puts match
+  end
+end
+```
 
 ## License
 
