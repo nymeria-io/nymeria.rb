@@ -26,7 +26,7 @@ require 'nymeria'
 Nymeria.api_key = 'ny_your-api-key'
 
 if Nymeria.check_authentication.success?
-  puts "OK!"
+  puts 'OK!'
 end
 ```
 
@@ -41,7 +41,7 @@ require 'nymeria'
 
 Nymeria.api_key = 'ny_your-api-key'
 
-resp = Nymeria.verify("someone@somewhere.com")
+resp = Nymeria.verify('someone@somewhere.com')
 
 if resp.success?
   puts resp.data.result
@@ -55,7 +55,7 @@ require 'nymeria'
 
 Nymeria.api_key = 'ny_your-api-key'
 
-resp = Nymeria.enrich("github.com/someone")
+resp = Nymeria.enrich('github.com/someone')
 
 if resp.success?
   puts resp.data.emails
@@ -72,7 +72,7 @@ require 'nymeria'
 
 Nymeria.api_key = 'ny_your-api-key'
 
-resp = Nymeria.enrich([ { url: "github.com/someone" }, { url: "linkedin.com/in/someoneelse" } ])
+resp = Nymeria.enrich([ { url: 'github.com/someone' }, { url: 'linkedin.com/in/someoneelse' } ])
 
 if resp.success?
   resp.data.each do |match|
