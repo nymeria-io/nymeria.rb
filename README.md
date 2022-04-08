@@ -2,10 +2,11 @@
 
 [![Gem Version](https://badge.fury.io/rb/nymeria.svg)](https://badge.fury.io/rb/nymeria)
 
-The official Ruby gem to interact with the Nymeria service and API.
+The official ruby gem to interact with the Nymeria service and API.
 
 Nymeria makes it easy to enrich data with contact information such as email
-addresses, phone numbers and social links.
+addresses, phone numbers and social links. The ruby gem wraps Nymeria's [public
+API](https://www.nymeria.io/developers) so you don't have to.
 
 ![Nymeria makes finding contact details a breeze.](https://www.nymeria.io/assets/images/marquee.png)
 
