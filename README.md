@@ -4,6 +4,9 @@
 
 The official Ruby gem to interact with the Nymeria service and API.
 
+Nymeria makes it easy to enrich data with contact information such as email
+addresses, phone numbers and social links.
+
 ![Nymeria makes finding contact details a breeze.](https://www.nymeria.io/assets/images/marquee.png)
 
 ## Usage
@@ -26,7 +29,7 @@ if Nymeria.check_authentication.success?
 end
 ```
 
-All API endpoints assume an auth key has been set. You should set the auth key
+All API endpoints assume an api key has been set. You should set the api key
 early in your program. The key will automatically be added to all future
 requests.
 
@@ -43,8 +46,6 @@ if resp.success?
   puts resp.data.result
 end
 ```
-
-At this time only professional email addresses are supported by the API.
 
 #### Enrich a Profile
 
@@ -63,7 +64,7 @@ end
 The enrich API works on a profile by profile basis. If you need to enrich
 multiple profiles at once you can use the bulk enrichment API.
 
-#### Bulk Enrichment of Profiles
+#### Bulk Enrichment
 
 ```ruby
 require 'nymeria'
