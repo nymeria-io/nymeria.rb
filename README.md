@@ -4,7 +4,7 @@
 
 The official Ruby gem to interact with the Nymeria service and API.
 
-![Nymeria makes finding contact details a breeze.](https://www.nymeria.io/marquee.png)
+![Nymeria makes finding contact details a breeze.](https://www.nymeria.io/assets/images/marquee.png)
 
 ## Usage
 
@@ -83,7 +83,7 @@ end
 
 MIT License
 
-Copyright (c) 2021, Nymeria LLC.
+Copyright (c) 2022, Nymeria LLC.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
