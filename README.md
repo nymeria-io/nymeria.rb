@@ -25,8 +25,8 @@ require 'nymeria'
 
 Nymeria.api_key = 'ny_your-api-key'
 
-if Nymeria.check_authentication.success?
-  puts 'OK!'
+if Nymeria.authenticated?
+  puts 'Success!'
 end
 ```
 
@@ -48,24 +48,31 @@ if resp.success?
 end
 ```
 
-#### Enrich a Profile
+#### Enrich Profiles
+
+The enrichment API works with a single profile, or multiple.
 
 ```ruby
 require 'nymeria'
 
 Nymeria.api_key = 'ny_your-api-key'
 
-resp = Nymeria.enrich('github.com/someone')
+resp = Nymeria.enrich({ url: 'github.com/someone' })
 
 if resp.success?
   puts resp.data.emails
 end
 ```
 
-The enrich API works on a profile by profile basis. If you need to enrich
-multiple profiles at once you can use the bulk enrichment API.
+The argument to enrich is a hash with one or more of the following keys:
 
-#### Bulk Enrichment
+1. url (a supported profile link, like LinkedIn, Github, Twitter or Facebook)
+2. email (a person's email, can be an outdated email)
+3. identifier (an identifier, such as a facebook ID "fid:1234" or a LinkedIn ID
+   "lid:1234").
+
+Bulk enrichment works much the same way as single enrichment, but you can pass
+n-arguments and you will get back a list of n-results.
 
 ```ruby
 require 'nymeria'
@@ -76,7 +83,10 @@ resp = Nymeria.enrich([ { url: 'github.com/someone' }, { url: 'linkedin.com/in/s
 
 if resp.success?
   resp.data.each do |match|
-    puts match
+    puts match.result['bio']
+    puts match.result['emails']
+    puts match.result['phone_numbers']
+    puts match.result['social']
   end
 end
 ```
