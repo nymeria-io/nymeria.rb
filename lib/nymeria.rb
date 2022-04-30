@@ -4,7 +4,7 @@ require 'json'
 require 'net/http'
 
 BASE_URL = 'https://www.nymeria.io/api/v3'
-USER_AGENT = 'nymeria.rb/1.0'
+USER_AGENT = 'nymeria.rb/2.0'
 
 # Nymeria is our primary module namespace.
 module Nymeria
@@ -17,6 +17,10 @@ module Nymeria
       req['User-Agent'] = USER_AGENT
       req
     end
+  end
+
+  def self.authenticated?
+    self.check_authentication.success?
   end
 
   def self.check_authentication
@@ -65,53 +69,92 @@ module Nymeria
     )
   end
 
-  def self.enrich(url, identifier = '')
-    uri = URI("#{BASE_URL}/enrich")
-    req = request(Net::HTTP::Post.new(uri))
-    req.body = JSON.dump({ url: url, identifier: identifier })
-
-    res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
-      http.request(req)
+  # Accepts one or more hashes with any of the following: { url: '', identifier: '', email: '', custom: { ... } }
+  def self.enrich(*args)
+    if args.nil? || !args.is_a?(Array)
+      return OpenStruct.new(
+        success?: false,
+        error: "Invalid parameter detected. Requires one or more hashes with any of the following keys; :url, ;identifier or :email."
+      )
     end
 
-    response = JSON.parse(res.body)
+    valid_keys = [:url, :identifier, :email, :custom]
 
-    # Use an open struct here?
-    OpenStruct.new(
-      success?: response['status'] == 'success',
-      usage: OpenStruct.new(response['usage']),
-      data: OpenStruct.new(response['data'])
-    )
-  rescue => e
-    OpenStruct.new(
-      success?: false,
-      error: "#{e}"
-    )
-  end
-
-  def self.bulk_enrich(people)
-    people = [people] unless people.is_a?(Array)
-
-    uri = URI("#{BASE_URL}/bulk-enrich")
-    req = request(Net::HTTP::Post.new(uri))
-    req.body = JSON.dump({ people: people })
-
-    res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
-      http.request(req)
+    valid_args = args.select do |arg|
+      arg.is_a?(Hash) && valid_keys.any? { |k| arg.keys.include?(k) }
     end
 
-    response = JSON.parse(res.body)
+    if valid_args.length == 0
+      return OpenStruct.new(
+        success?: false,
+        error: "Invalid parameter detected. Requires one or more hashes with any of the following keys; :url, ;identifier or :email."
+      )
+    end
 
-    # Use an open struct here?
-    OpenStruct.new(
-      success?: response['status'] == 'success',
-      usage: OpenStruct.new(response['usage']),
-      data: response.fetch('data', []).map { |data| OpenStruct.new(data) }
-    )
-  rescue => e
-    OpenStruct.new(
-      success?: false,
-      error: "#{e}"
-    )
+    # Clean the args; remove any unsupported keys.
+    valid_args.each do |arg|
+      arg.keys.each do |key|
+        arg.delete(key) unless valid_keys.include?(key)
+      end
+    end
+
+    if valid_args.length == 1
+      #
+      # Single Enrichment
+      #
+      begin
+        arg = valid_args.first
+
+        uri = URI("#{BASE_URL}/enrich")
+        req = request(Net::HTTP::Post.new(uri))
+        req.body = JSON.dump(arg)
+
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+          http.request(req)
+        end
+
+        response = JSON.parse(res.body)
+
+        return OpenStruct.new(
+          success?: response['status'] == 'success',
+          error: response['error'],
+          usage: OpenStruct.new(response['usage']),
+          data: OpenStruct.new(response['data'])
+        )
+      rescue => e
+        return OpenStruct.new(
+          success?: false,
+          error: "#{e}"
+        )
+      end
+    else
+      #
+      # Bulk Enrichment
+      #
+      begin
+        uri = URI("#{BASE_URL}/bulk-enrich")
+        req = request(Net::HTTP::Post.new(uri))
+        req.body = JSON.dump({ people: args })
+
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+          http.request(req)
+        end
+
+        response = JSON.parse(res.body)
+
+        # Use an open struct here?
+        OpenStruct.new(
+          success?: response['status'] == 'success',
+          error: response['error'],
+          usage: OpenStruct.new(response['usage']),
+          data: response.fetch('data', []).map { |data| OpenStruct.new(data) }
+        )
+      rescue => e
+        OpenStruct.new(
+          success?: false,
+          error: "#{e}"
+        )
+      end
+    end
   end
 end
