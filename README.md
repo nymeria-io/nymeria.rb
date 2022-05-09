@@ -91,6 +91,46 @@ if resp.success?
 end
 ```
 
+### Search for People
+
+You can query Nymeria's people database for people that match a certain
+criteria. You can view previews for each person and "unlock" the complete
+profile.
+
+Currently, you can query using any of the following parameters:
+
+1. `q` a raw query which will match keywords in a person's name, title, skills,
+   etc.
+2. `first_name`
+3. `last_name`
+4. `title`
+5. `company`
+6. `skills` a comma separated list of skills.
+7. `location` city, state, country, etc.
+8. `country` matches country only.
+
+```ruby
+require 'nymeria'
+
+Nymeria.api_key = 'ny_your-api-key'
+
+previews = Nymeria.people({ q: 'Ruby on Rails' })
+
+if previews.success?
+  # Reveal all people from the search query results.
+  people = Nymeria.reveal( previews.data.map(&:uuid) )
+
+  if people.success?
+    people.data.each do |match|
+      puts match.result['bio']
+      puts match.result['emails']
+      puts match.result['phone_numbers']
+      puts match.result['social']
+    end
+  end
+end
+```
+
 ## License
 
 MIT License
