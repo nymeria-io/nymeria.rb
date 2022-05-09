@@ -33,7 +33,6 @@ module Nymeria
 
     response = JSON.parse(res.body)
 
-    # Use an open struct here?
     OpenStruct.new(
       success?: response['status'] == 'success',
       error: response['developer_message']
@@ -56,7 +55,6 @@ module Nymeria
 
     response = JSON.parse(res.body)
 
-    # Use an open struct here?
     OpenStruct.new(
       success?: response['status'] == 'success',
       usage: OpenStruct.new(response['usage']),
@@ -142,7 +140,6 @@ module Nymeria
 
         response = JSON.parse(res.body)
 
-        # Use an open struct here?
         OpenStruct.new(
           success?: response['status'] == 'success',
           error: response['error'],
@@ -155,6 +152,59 @@ module Nymeria
           error: "#{e}"
         )
       end
+    end
+  end
+
+  def self.people(query)
+    begin
+      uri = URI("#{BASE_URL}/people")
+      uri.query = URI.encode_www_form(query)
+
+      req = request(Net::HTTP::Get.new(uri))
+
+      res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+        http.request(req)
+      end
+
+      response = JSON.parse(res.body)
+
+      OpenStruct.new(
+        success?: response['status'] == 'success',
+        error: response['error'],
+        usage: OpenStruct.new(response['usage']),
+        data: response.fetch('data', []).map { |data| OpenStruct.new(data) }
+      )
+    rescue => e
+      OpenStruct.new(
+        success?: false,
+        error: "#{e}"
+      )
+    end
+  end
+
+  def self.reveal(uuids)
+    begin
+      uri = URI("#{BASE_URL}/people")
+      req = request(Net::HTTP::Post.new(uri))
+      req.body = JSON.dump({ uuids: uuids })
+
+      res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+        http.request(req)
+      end
+
+      response = JSON.parse(res.body)
+
+      OpenStruct.new(
+        success?: response['status'] == 'success',
+        error: response['error'],
+        usage: OpenStruct.new(response['usage']),
+        data: response.fetch('data', []).map { |data| OpenStruct.new(data) }
+      )
+    rescue => e
+      OpenStruct.new(
+        success?: false,
+        error: "#{e}"
+      )
     end
   end
 end
