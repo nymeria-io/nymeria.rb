@@ -76,7 +76,7 @@ module Nymeria
       )
     end
 
-    valid_keys = [:url, :identifier, :email, :custom]
+    valid_keys = [:url, :identifier, :email, :custom, :filter, :require]
 
     valid_args = args.select do |arg|
       arg.is_a?(Hash) && valid_keys.any? { |k| arg.keys.include?(k) }
