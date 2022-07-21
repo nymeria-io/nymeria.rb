@@ -60,8 +60,6 @@ are set up to send and receive email, etc.
 
 #### Enriching Profiles
 
-The enrichment API works with a single profile, or multiple.
-
 ```ruby
 require 'nymeria'
 
@@ -98,10 +96,10 @@ to enrich via a url.
 
 At this time, Nymeria supports look ups for the following sites:
 
-1.LinkedIn
-1.Facebook
-1.Twitter
-1.GitHub
+1. LinkedIn
+1. Facebook
+1. Twitter
+1. GitHub
 
 Please note, if using LinkedIn urls provide the public profile
 LinkedIn url.
