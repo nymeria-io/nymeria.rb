@@ -120,7 +120,7 @@ valid requirements:
 
 You can specify multiple requirements by using a command between each requirement.
 For example you can require a phone and personal email with: "phone,personal-email"
-as the Require parameter.
+as the require parameter.
 
 ### Searching for People
 
@@ -156,13 +156,13 @@ profile that is revealed.
 
 The hash parameter enables you to specify your search criteria. In particular, you can specify:
 
-    1. `q` for general keyword matching text.
-    1. `location` to match a specific city or country.
-    1. `company` to match a current company.
-    1. `title` to match current titles.
-    1. `has_email` if you only want to find people that have email addresses.
-    1. `has_phone` if you only want to find people that has phone numbers.
-    1. `skills` if you are looking to match specific skills.
+1. `q` for general keyword matching text.
+1. `location` to match a specific city or country.
+1. `company` to match a current company.
+1. `title` to match current titles.
+1. `has_email` if you only want to find people that have email addresses.
+1. `has_phone` if you only want to find people that has phone numbers.
+1. `skills` if you are looking to match specific skills.
 
 By default, 10 people will be returned for each page of search results. You can specify the `page`
 as part of your hash if you want to access additional pages of people.
