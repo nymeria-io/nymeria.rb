@@ -2,11 +2,9 @@
 
 [![Gem Version](https://badge.fury.io/rb/nymeria.svg)](https://badge.fury.io/rb/nymeria)
 
-The official ruby gem to interact with the Nymeria service and API.
-
-Nymeria makes it easy to enrich data with contact information such as email
-addresses, phone numbers and social links. The ruby gem wraps Nymeria's [public
-API](https://www.nymeria.io/developers) so you don't have to.
+The official ruby gem to interact with Nymeria's service. You can use Nymeria to enrich data with
+contact information such as email addresses, phone numbers and social links. The ruby gem wraps
+Nymeria's [public API](https://www.nymeria.io/developers) so you don't have to.
 
 ![Nymeria makes finding contact details a breeze.](https://www.nymeria.io/assets/images/marquee.png)
 
@@ -18,68 +16,66 @@ API](https://www.nymeria.io/developers) so you don't have to.
 $ gem install nymeria
 ```
 
-#### Set and Check an API Key.
+#### Setting and Checking an API Key
 
 ```ruby
 require 'nymeria'
 
-Nymeria.api_key = 'ny_your-api-key'
+Nymeria.api_key = 'YOUR API KEY GOES HERE'
 
 if Nymeria.authenticated?
   puts 'Success!'
 end
 ```
 
-All API endpoints assume an api key has been set. You should set the api key
-early in your program. The key will automatically be added to all future
-requests.
+All actions that interact with the Nymeria service assume an API key has been
+set and will fail if a key hasn't been set. A key only needs to be set once and
+can be set at the start of your program.
 
-#### Verify an Email Address
+If you want to check a key's validity you can use the CheckAuthentication
+function to verify the validity of a key that has been set. If no error is
+returned then the API key is valid.
+
+#### Verifying an Email Address
 
 ```ruby
 require 'nymeria'
 
-Nymeria.api_key = 'ny_your-api-key'
+Nymeria.api_key = 'YOUR API KEY GOES HERE'
 
-resp = Nymeria.verify('someone@somewhere.com')
+resp = Nymeria.verify('dev@nymeria.io')
 
 if resp.success?
   puts resp.data.result
 end
 ```
 
-#### Enrich Profiles
+You can verify the deliverability of an email address using Nymeria's service.
+The response will contain a result and tags.
+
+The result will either be "valid" or "invalid". The tags will give you
+additional details regarding the email address. For example, the tags will tell
+you if the mail server connection was successful, if the domain's DNS records
+are set up to send and receive email, etc.
+
+#### Enriching Profiles
 
 The enrichment API works with a single profile, or multiple.
 
 ```ruby
 require 'nymeria'
 
-Nymeria.api_key = 'ny_your-api-key'
+Nymeria.api_key = 'YOUR API KEY GOES HERE'
 
-resp = Nymeria.enrich({ url: 'github.com/someone' })
+# You can enrich a single record like this.
+resp = Nymeria.enrich({ url: 'github.com/nymeriaio' })
 
 if resp.success?
   puts resp.data.emails
 end
-```
 
-The argument to enrich is a hash with one or more of the following keys:
-
-1. url (a supported profile link, like LinkedIn, Github, Twitter or Facebook)
-2. email (a person's email, can be an outdated email)
-3. identifier (an identifier, such as a facebook ID "fid:1234" or a LinkedIn ID
-   "lid:1234").
-
-Bulk enrichment works much the same way as single enrichment, but you can pass
-n-arguments and you will get back a list of n-results.
-
-```ruby
-require 'nymeria'
-
-Nymeria.api_key = 'ny_your-api-key'
-
-resp = Nymeria.enrich([ { url: 'github.com/someone' }, { url: 'linkedin.com/in/someoneelse' } ])
+# You can also pass multiple records as an array to do a bulk enrichment.
+resp = Nymeria.enrich([ { url: 'github.com/nymeriaio' }, { url: 'linkedin.com/in/wozniaksteve' } ])
 
 if resp.success?
   resp.data.each do |match|
@@ -91,23 +87,44 @@ if resp.success?
 end
 ```
 
-### Search for People
+You can enrich one or more profiles using the enrich function. The enrich
+function takes a hash, or an array of hashes. The most common hash parameters to
+use are `url` and `email`.
 
-You can query Nymeria's people database for people that match a certain
-criteria. You can view previews for each person and "unlock" the complete
-profile.
+If you want to enrich an email address you can specify an email and the Nymeria
+service will locate the person and return all associated data for them.
+Likewise, you can specify a supported url via the url parameter if you prefer
+to enrich via a url.
 
-Currently, you can query using any of the following parameters:
+At this time, Nymeria supports look ups for the following sites:
 
-1. `q` a raw query which will match keywords in a person's name, title, skills,
-   etc.
-2. `first_name`
-3. `last_name`
-4. `title`
-5. `company`
-6. `skills` a comma separated list of skills.
-7. `location` city, state, country, etc.
-8. `country` matches country only.
+1.LinkedIn
+1.Facebook
+1.Twitter
+1.GitHub
+
+Please note, if using LinkedIn urls provide the public profile
+LinkedIn url.
+
+Two other common parameters are `filter` and `require`. If you wish to filter out
+professional emails (only receive personal emails) you can do so by specifying
+`"professional-emails"` as the filter parameter.
+
+The require parameter works by requiring certain kinds of data.  For example, you
+can request an enrichment but only receive a result if the profile contains a phone
+number (or an email, personal email, professional email, etc). The following are all
+valid requirements:
+
+1. "email"
+1. "phone"
+1. "professional-email"
+1. "personal-email"
+
+You can specify multiple requirements by using a command between each requirement.
+For example you can require a phone and personal email with: "phone,personal-email"
+as the Require parameter.
+
+### Searching for People
 
 ```ruby
 require 'nymeria'
@@ -130,6 +147,30 @@ if previews.success?
   end
 end
 ```
+
+You can perform searches using Nymeria's database of people. The search works using two functions:
+
+1. `people` which performs a search and returns a preview of each person.
+1. `reveal` which takes UUIDs of people and returns complete profiles.
+
+Note, using `people` does not consume any credits but using `reveal` will consume credit for each
+profile that is revealed.
+
+The hash parameter enables you to specify your search criteria. In particular, you can specify:
+
+    1. `q` for general keyword matching text.
+    1. `location` to match a specific city or country.
+    1. `company` to match a current company.
+    1. `title` to match current titles.
+    1. `has_email` if you only want to find people that have email addresses.
+    1. `has_phone` if you only want to find people that has phone numbers.
+    1. `skills` if you are looking to match specific skills.
+
+By default, 10 people will be returned for each page of search results. You can specify the `page`
+as part of your hash if you want to access additional pages of people.
+
+You can filter the search results and if you want to reveal the complete details you can do so
+by sending the uuids via `reveal`. Please note, credit will be consumed for each person that is revealed.
 
 ## License
 
