@@ -32,7 +32,7 @@ All actions that interact with the Nymeria service assume an API key has been
 set and will fail if a key hasn't been set. A key only needs to be set once and
 can be set at the start of your program.
 
-If you want to check a key's validity you can use the CheckAuthentication
+If you want to check a key's validity you can use the authenticated?
 function to verify the validity of a key that has been set. If no error is
 returned then the API key is valid.
 
@@ -118,7 +118,7 @@ valid requirements:
 1. "professional-email"
 1. "personal-email"
 
-You can specify multiple requirements by using a command between each requirement.
+You can specify multiple requirements by using a comma between each requirement.
 For example you can require a phone and personal email with: "phone,personal-email"
 as the require parameter.
 
