@@ -129,7 +129,7 @@ as the Require parameter.
 ```ruby
 require 'nymeria'
 
-Nymeria.api_key = 'ny_your-api-key'
+Nymeria.api_key = 'YOUR API KEY GOES HERE'
 
 previews = Nymeria.people({ q: 'Ruby on Rails' })
 
