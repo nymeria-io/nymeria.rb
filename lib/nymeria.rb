@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'company'
-require 'email'
-require 'person'
+require 'nymeria/company'
+require 'nymeria/email'
+require 'nymeria/person'
 
 require 'json'
 require 'net/http'
