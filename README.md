@@ -21,32 +21,24 @@ $ gem install nymeria
 ```ruby
 require 'nymeria'
 
-Nymeria.api_key = 'YOUR API KEY GOES HERE'
-
-if Nymeria.authenticated?
-  puts 'Success!'
-end
+Nymeria.API_KEY = 'YOUR API KEY GOES HERE'
 ```
 
 All actions that interact with the Nymeria service assume an API key has been
 set and will fail if a key hasn't been set. A key only needs to be set once and
 can be set at the start of your program.
 
-If you want to check a key's validity you can use the authenticated?
-function to verify the validity of a key that has been set. If no error is
-returned then the API key is valid.
-
 #### Verifying an Email Address
 
 ```ruby
 require 'nymeria'
 
-Nymeria.api_key = 'YOUR API KEY GOES HERE'
+Nymeria.API_KEY = 'YOUR API KEY GOES HERE'
 
-resp = Nymeria.verify('dev@nymeria.io')
+resp = Nymeria::Email.verify('dev@nymeria.io')
 
-if resp.success?
-  puts resp.data.result
+if resp.status == 200
+  puts resp.data['result']
 end
 ```
 
@@ -63,25 +55,18 @@ are set up to send and receive email, etc.
 ```ruby
 require 'nymeria'
 
-Nymeria.api_key = 'YOUR API KEY GOES HERE'
+Nymeria.API_KEY = 'YOUR API KEY GOES HERE'
 
 # You can enrich a single record like this.
-resp = Nymeria.enrich({ url: 'github.com/nymeriaio' })
+resp = Nymeria::Person.enrich({ profile: 'github.com/nymeriaio' })
 
-if resp.success?
-  puts resp.data.emails
-end
+puts "#{c.data['id']} #{c.data['first_name']} #{c.data['skills']}" if c.status == 200
 
 # You can also pass multiple records as an array to do a bulk enrichment.
-resp = Nymeria.enrich([ { url: 'github.com/nymeriaio' }, { url: 'linkedin.com/in/wozniaksteve' } ])
+resp = Nymeria::Person.bulk_enrich({ params: { email: 'foo@bar.com'} }, { params: { profile: 'linkedin.com/in/wozniaksteve' }})
 
-if resp.success?
-  resp.data.each do |match|
-    puts match.result['bio']
-    puts match.result['emails']
-    puts match.result['phone_numbers']
-    puts match.result['social']
-  end
+resp.each do |p|
+  puts p.dig('data', 'emails')
 end
 ```
 
@@ -127,48 +112,16 @@ as the require parameter.
 ```ruby
 require 'nymeria'
 
-Nymeria.api_key = 'YOUR API KEY GOES HERE'
+Nymeria.API_KEY = 'YOUR API KEY GOES HERE'
 
-previews = Nymeria.people({ q: 'Ruby on Rails' })
+people = Nymeria::Person.search({ query: 'skills:["Ruby on Rails"]' })
 
-if previews.success?
-  # Reveal all people from the search query results.
-  people = Nymeria.reveal( previews.data.map(&:uuid) )
-
-  if people.success?
-    people.data.each do |match|
-      puts match.result['bio']
-      puts match.result['emails']
-      puts match.result['phone_numbers']
-      puts match.result['social']
-    end
+if people.status == 200
+  people.each do |p|
+    puts p.dig('data', 'emails')
   end
 end
 ```
-
-You can perform searches using Nymeria's database of people. The search works using two functions:
-
-1. `people` which performs a search and returns a preview of each person.
-1. `reveal` which takes UUIDs of people and returns complete profiles.
-
-Note, using `people` does not consume any credits but using `reveal` will consume credit for each
-profile that is revealed.
-
-The hash parameter enables you to specify your search criteria. In particular, you can specify:
-
-1. `q` for general keyword matching text.
-1. `location` to match a specific city or country.
-1. `company` to match a current company.
-1. `title` to match current titles.
-1. `has_email` if you only want to find people that have email addresses.
-1. `has_phone` if you only want to find people that has phone numbers.
-1. `skills` if you are looking to match specific skills.
-
-By default, 10 people will be returned for each page of search results. You can specify the `page`
-as part of your hash if you want to access additional pages of people.
-
-You can filter the search results and if you want to reveal the complete details you can do so
-by sending the uuids via `reveal`. Please note, credit will be consumed for each person that is revealed.
 
 ## License
 
