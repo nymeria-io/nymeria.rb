@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'nymeria/company.rb'
-require 'nymeria/email.rb'
-require 'nymeria/person.rb'
+require 'company'
+require 'email'
+require 'person'
 
 require 'json'
 require 'net/http'
 
 API_KEY = ''
 BASE_URL = 'https://www.nymeria.io/api/v4'
-USER_AGENT = 'nymeria.rb/2.0.4'
+USER_AGENT = 'nymeria.rb/2.0.6'
 
 # Nymeria is our primary module namespace.
 module Nymeria
