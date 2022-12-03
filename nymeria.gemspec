@@ -10,6 +10,6 @@ Gem::Specification.new do |s|
   s.files       = `git ls-files -z`.split("\x0")
   s.require_paths = ['lib']
   s.homepage    = 'https://www.nymeria.io'
-  s.metadata    = { "source_code_uri" => "https://git.nymeria.io/nymeria.rb" }
+  s.metadata    = { "source_code_uri" => "https://github.com/nymeriaio/nymeria.rb" }
   s.license     = 'MIT'
 end
