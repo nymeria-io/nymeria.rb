@@ -21,7 +21,7 @@ gem install nymeria
 ```ruby
 require 'nymeria'
 
-Nymeria.API_KEY = 'YOUR API KEY GOES HERE'
+Nymeria::API_KEY = 'YOUR API KEY GOES HERE'
 ```
 
 All actions that interact with the Nymeria service assume an API key has been
@@ -33,7 +33,7 @@ can be set at the start of your program.
 ```ruby
 require 'nymeria'
 
-Nymeria.API_KEY = 'YOUR API KEY GOES HERE'
+Nymeria::API_KEY = 'YOUR API KEY GOES HERE'
 
 resp = Nymeria::Email.verify('dev@nymeria.io')
 
@@ -55,7 +55,7 @@ are set up to send and receive email, etc.
 ```ruby
 require 'nymeria'
 
-Nymeria.API_KEY = 'YOUR API KEY GOES HERE'
+Nymeria::API_KEY = 'YOUR API KEY GOES HERE'
 
 # You can enrich a single record like this.
 resp = Nymeria::Person.enrich({ profile: 'github.com/nymeriaio' })
@@ -112,7 +112,7 @@ as the require parameter.
 ```ruby
 require 'nymeria'
 
-Nymeria.API_KEY = 'YOUR API KEY GOES HERE'
+Nymeria::API_KEY = 'YOUR API KEY GOES HERE'
 
 people = Nymeria::Person.search({ query: 'skills:["Ruby on Rails"]' })
 
