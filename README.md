@@ -13,7 +13,7 @@ Nymeria's [public API](https://www.nymeria.io/developers) so you don't have to.
 #### Installation
 
 ```bash
-$ gem install nymeria
+gem install nymeria
 ```
 
 #### Setting and Checking an API Key
