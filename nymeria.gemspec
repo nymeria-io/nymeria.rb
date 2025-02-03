@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'nymeria'
-  s.version     = '2.1.0'
+  s.version     = '2.1.1'
   s.summary     = 'Easily interact with Nymeria\'s API to find and verify people\'s contact information.'
   s.description = 'Nymeria enables people to easily discover and connect with people. This gem is a light weight wrapper around Nymeria\'s API. With this gem you can easily interact with the API to find and verify people\'s contact information.'
   s.authors     = ['Nymeria, LLC']
@@ -10,6 +10,6 @@ Gem::Specification.new do |s|
   s.files       = `git ls-files -z`.split("\x0")
   s.require_paths = ['lib']
   s.homepage    = 'https://www.nymeria.io'
-  s.metadata    = { "source_code_uri" => "https://github.com/nymeriaio/nymeria.rb" }
+  s.metadata    = { "source_code_uri" => "https://github.com/nymeria-io/nymeria.rb" }
   s.license     = 'MIT'
 end
