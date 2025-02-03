@@ -21,7 +21,7 @@ module Nymeria
       )
     end
 
-    # args: { query: 'name:Nymeria', size: 10, from: 0 }
+    # args: { name: '', size: '', location: '', limit: 10, offset: 0 }
     def self.search(args={})
       uri = URI("#{BASE_URL}/company/search")
 

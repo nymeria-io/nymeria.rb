@@ -58,9 +58,9 @@ require 'nymeria'
 Nymeria::API_KEY = 'YOUR API KEY GOES HERE'
 
 # You can enrich a single record like this.
-resp = Nymeria::Person.enrich({ profile: 'github.com/nymeriaio' })
+resp = Nymeria::Person.enrich({ profile: 'linkedin.com/in/prophittcorey' })
 
-puts "#{c.data['id']} #{c.data['first_name']} #{c.data['skills']}" if c.status == 200
+puts "#{resp.data['id']} #{resp.data['first_name']} #{resp.data['emails']}" if resp.status == 200
 
 # You can also pass multiple records as an array to do a bulk enrichment.
 resp = Nymeria::Person.bulk_enrich({ params: { email: 'foo@bar.com'} }, { params: { profile: 'linkedin.com/in/wozniaksteve' }})
@@ -109,16 +109,26 @@ as the require parameter.
 
 ### Searching for People
 
+You can search for people based on:
+
+1. first_name
+2. last_name
+3. title
+4. company
+5. industry
+6. location
+7. country
+
 ```ruby
 require 'nymeria'
 
 Nymeria::API_KEY = 'YOUR API KEY GOES HERE'
 
-people = Nymeria::Person.search({ query: 'skills:["Ruby on Rails"]' })
+people = Nymeria::Person.search({ first_name: 'corey', company: 'nymeria' })
 
 if people.status == 200
   people.each do |p|
-    puts p.dig('data', 'emails')
+    puts p.dig('emails')
   end
 end
 ```
@@ -127,7 +137,7 @@ end
 
 MIT License
 
-Copyright (c) 2022, Nymeria LLC.
+Copyright (c) 2025, Nymeria LLC.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

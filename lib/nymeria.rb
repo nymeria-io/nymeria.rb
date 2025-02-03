@@ -10,7 +10,7 @@ require 'net/http'
 # Nymeria is our primary module namespace.
 module Nymeria
   BASE_URL = 'https://www.nymeria.io/api/v4'
-  USER_AGENT = 'nymeria.rb/2.1.0'
+  USER_AGENT = 'nymeria.rb/2.2.0'
 
   class << self
     def request(req)
